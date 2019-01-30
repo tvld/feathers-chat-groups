@@ -79,22 +79,33 @@ const chatHTML = `<main class="flex flex-column">
   </div>
 </main>`;
 
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 // Add a new user to the list
 const addUser = user => {
   const userList = document.querySelector('.user-list');
 
   if(userList) {
+    // Escape HTML, can be removed after adding validation on user registration.
+    const user_email = escapeHtml(user.email);
     // Add the user to the list
     userList.insertAdjacentHTML('beforeend', `<li>
       <a class="block relative" href="#">
         <img src="${user.avatar}" alt="" class="avatar">
-        <span class="absolute username">${user.email}</span>
+        <span class="absolute username">${user_email}</span>
       </a>
     </li>`);
 
     // Update the number of users
     const userCount = document.querySelectorAll('.user-list li').length;
-    
+
     document.querySelector('.online-count').innerHTML = userCount;
   }
 };
@@ -104,16 +115,16 @@ const addMessage = message => {
   // Find the user belonging to this message or use the anonymous user if not found
   const { user = {} } = message;
   const chat = document.querySelector('.chat');
-  const text = message.text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const text = escapeHtml(message.text);
+  // Escape HTML, can be removed after adding validation on user registration.
+  const user_email = escapeHtml(user.email);
 
   if(chat) {
     chat.insertAdjacentHTML( 'beforeend', `<div class="message flex flex-row">
-      <img src="${user.avatar}" alt="${user.email}" class="avatar">
+      <img src="${user.avatar}" alt="${user_email}" class="avatar">
       <div class="message-wrapper">
         <p class="message-header">
-          <span class="username font-600">${user.email}</span>
+          <span class="username font-600">${user_email}</span>
           <span class="sent-date font-300">${moment(message.createdAt).format('MMM Do, hh:mm:ss')}</span>
         </p>
         <p class="message-content font-300">${text}</p>
@@ -145,7 +156,7 @@ const showChat = async () => {
       $limit: 25
     }
   });
-  
+
   // We want to show the newest message last
   messages.data.reverse().forEach(addMessage);
 
@@ -191,7 +202,7 @@ document.addEventListener('click', async ev => {
   case 'signup': {
     // For signup, create a new user and then log them in
     const credentials = getCredentials();
-    
+
     // First create the user
     await client.service('users').create(credentials);
     // If successful log them in
@@ -208,9 +219,9 @@ document.addEventListener('click', async ev => {
   }
   case 'logout': {
     await client.logout();
-    
+
     document.getElementById('app').innerHTML = loginHTML;
-    
+
     break;
   }
   }
