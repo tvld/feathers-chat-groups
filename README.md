@@ -13,6 +13,7 @@ This project uses [Feathers](http://feathersjs.com), a framework for real-time a
 
 Other chat frontends can be found at:
 
+- TypeScript: [feathersjs/feathers-chat-ts](https://github.com/feathersjs/feathers-chat-ts)
 - React: [feathersjs-ecosystem/feathers-chat-react](https://github.com/feathersjs-ecosystem/feathers-chat-react)
 - React Native: [feathersjs-ecosystem/feathers-react-native-chat](https://github.com/feathersjs-ecosystem/feathers-react-native-chat)
 - Angular: [feathersjs-ecosystem/feathers-chat-angular](https://github.com/feathersjs-ecosystem/feathers-chat-angular)
