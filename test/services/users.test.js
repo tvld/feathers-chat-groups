@@ -14,7 +14,7 @@ describe('\'users\' service', () => {
       password: 'secret'
     });
 
-    // Verify Gravatar has been set to what we'd expect
+    // Verify Gravatar has been set as we'd expect
     assert.equal(user.avatar, 'https://s.gravatar.com/avatar/55502f40dc8b7c769880b10874abc9d0?s=60');
     // Makes sure the password got encrypted
     assert.ok(user.password !== 'secret');
@@ -29,7 +29,7 @@ describe('\'users\' service', () => {
       password: 'secret'
     }, params);
 
-    // Make sure password has been remove
+    // Make sure password has been removed
     assert.ok(!user.password);
   });
 });
