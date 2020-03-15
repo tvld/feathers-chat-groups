@@ -1,6 +1,5 @@
 # feathers-chat
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/feathersjs/feathers-chat.svg)](https://greenkeeper.io/)
 [![Build Status](https://img.shields.io/travis/feathersjs/feathers-chat/master.svg)](https://travis-ci.org/feathersjs/feathers-chat)
 
 > A FeathersJS chat application
@@ -9,7 +8,7 @@
 
 This project uses [Feathers](http://feathersjs.com), a framework for real-time applications and REST APIs. It contains the chat application created in [the Feathers guide](https://docs.feathersjs.com/guides/) and a frontend in plain JavaScript.
 
-![The Feathers chat application](https://docs.feathersjs.com/guides/basics/assets/feathers-chat.png)
+![The Feathers chat application](https://docs.feathersjs.com/assets/img/feathers-chat.91960785.png)
 
 Other chat frontends can be found at:
 
