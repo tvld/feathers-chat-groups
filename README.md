@@ -6,54 +6,77 @@
 
 ## About
 
-This project uses [Feathers](http://feathersjs.com), a framework for real-time applications and REST APIs. It contains the chat application created in [the Feathers guide](https://docs.feathersjs.com/guides/) and a frontend in plain JavaScript.
+This repository includes the TypeScript and JavaScript API server from the [official Feathers chat guide](https://dove.feathersjs.com/guides/basics/generator.html) as well as chat frontend examples for different frameworks.
 
-![The Feathers chat application](https://docs.feathersjs.com/assets/img/feathers-chat.91960785.png)
+## API server
 
-Other chat frontends can be found at:
+### TypeScript
 
-- TypeScript: [feathersjs/feathers-chat-ts](https://github.com/feathersjs/feathers-chat-ts)
-- React: [feathersjs-ecosystem/feathers-chat-react](https://github.com/feathersjs-ecosystem/feathers-chat-react)
-- React Native: [feathersjs-ecosystem/feathers-react-native-chat](https://github.com/feathersjs-ecosystem/feathers-react-native-chat)
-- Angular: [feathersjs-ecosystem/feathers-chat-angular](https://github.com/feathersjs-ecosystem/feathers-chat-angular)
-- VueJS with Vuex: [feathers-plus/feathers-chat-vuex](https://github.com/feathers-plus/feathers-chat-vuex)
-
-> __Important:__ This project requires NodeJS 10 or later.
-
-## Getting Started
-
-Getting up and running is as easy as 1, 2, 3.
-
-1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
-2. Install your dependencies
-
-    ```
-    cd path/to/feathers-chat
-    npm install
-    ```
-
-3. Start your app
-
-    ```
-    npm start
-    ```
-
-## Testing
-
-Simply run `npm test` and all your tests in the `test/` directory will be run.
-
-## Scaffolding
-
-Feathers has a powerful command line interface. Here are a few things it can do:
+The TypeScript version of the chat API server can be found in the [typescript folder](./typescript/). To start it install the dependencies like this:
 
 ```
-$ npm install -g @feathersjs/cli          # Install Feathers CLI
-
-$ feathers generate service               # Generate a new Service
-$ feathers generate hook                  # Generate a new Hook
-$ feathers help                           # Show all commands
+cd typescript
+npm install
 ```
 
-## Help
+Then compile the source code and run the database migration which will initialize an SQLite datbase in the `feathers-chat.sqlite` file.
 
-For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
+```
+npm run compile
+npm run migrate
+```
+
+It can now be started with:
+
+```
+npm start
+```
+
+Or in development mode with
+
+```
+npm run dev
+```
+
+### JavaScript
+
+The JavaScript version of the chat API server can be found in the [javascript folder](./javascript/). To start it install the dependencies like this:
+
+```
+cd javascript
+npm install
+```
+
+Then run the database migration which will initialize an SQLite datbase in the `feathers-chat.sqlite` file.
+
+```
+npm run migrate
+```
+
+It can now be started with:
+
+```
+npm start
+```
+
+Or in development mode with
+
+```
+npm run dev
+```
+
+## Frontend
+
+### Plain JavaScript
+
+A plain JavaScript frontend can be found in the [public](./public/) folder which is hosted statically by both, the TypeScript and JavaScript [api server](#api-server).
+
+### React
+
+The React chat frontend example in the [react](./react/) folder uses create-react-app, TypeScript and the typed client available in the [TypeScript API server](#typescript).
+
+The TypeScript API server needs to be compiled and then running in order for this example to work.
+
+### VueJS
+
+TBD
