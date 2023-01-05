@@ -1,4 +1,4 @@
-/* global io, feathers */
+/* global io, feathers, moment */
 // Establish a Socket.io connection
 const socket = io()
 // Initialize our Feathers client application through Socket.io
@@ -18,10 +18,14 @@ const loginTemplate = (error) => `<div class="login flex min-h-screen bg-neutral
     </h1>
   </div>
   <form class="card-body pt-2">
-    ${error ? `<div class="alert alert-error justify-start">
+    ${
+      error
+        ? `<div class="alert alert-error justify-start">
       <i class="i-feather-alert-triangle"></i>
       <span class="flex-grow">${error.message}</span>
-    </div>` : ''}
+    </div>`
+        : ''
+    }
     <div class="form-control">
       <label for="email" class="label"><span class="label-text">Email</span></label>
       <input type="text" name="email" placeholder="enter email" class="input input-bordered">
@@ -37,7 +41,8 @@ const loginTemplate = (error) => `<div class="login flex min-h-screen bg-neutral
 </div>`
 
 // Main chat view
-const chatTemplate = () => `<div class="drawer drawer-mobile"><input id="drawer-left" type="checkbox" class="drawer-toggle">
+const chatTemplate =
+  () => `<div class="drawer drawer-mobile"><input id="drawer-left" type="checkbox" class="drawer-toggle">
   <div class="drawer-content flex flex-col">
     <div class="navbar w-full">
       <div class="navbar-start">
@@ -57,7 +62,7 @@ const chatTemplate = () => `<div class="drawer drawer-mobile"><input id="drawer-
       </div>
       </div>
     </div>
-    <div class="chat h-full overflow-y-auto px-3"></div>
+    <div id="chat" class="h-full overflow-y-auto px-3"></div>
     <div class="form-control w-full py-2 px-3">
       <form class="input-group overflow-hidden" id="send-message">
         <input name="text" type="text" placeholder="Compose message" class="input input-bordered w-full">
@@ -73,19 +78,19 @@ const chatTemplate = () => `<div class="drawer drawer-mobile"><input id="drawer-
 </div>`
 
 // Helper to safely escape HTML
-const escapeHTML = str => str.replace(/&/g, '&amp')
-    .replace(/</g, '&lt').replace(/>/g, '&gt')
+const escapeHTML = (str) => str.replace(/&/g, '&amp').replace(/</g, '&lt').replace(/>/g, '&gt')
 
-const formatDate = timestamp => new Intl.DateTimeFormat('en-US', {
-  timeStyle: 'short',
-  dateStyle: 'medium'
-}).format(new Date(timestamp))
+const formatDate = (timestamp) =>
+  new Intl.DateTimeFormat('en-US', {
+    timeStyle: 'short',
+    dateStyle: 'medium'
+  }).format(new Date(timestamp))
 
 // Add a new user to the list
-const addUser = user => {
+const addUser = (user) => {
   const userList = document.querySelector('.user-list')
 
-  if(userList) {
+  if (userList) {
     // Add the user to the list
     userList.innerHTML += `<li class="user">
       <a>
@@ -103,22 +108,25 @@ const addUser = user => {
 }
 
 // Renders a message to the page
-const addMessage = message => {
+const addMessage = (message) => {
   // The user that sent this message (added by the populate-user hook)
   const { user = {} } = message
-  const chat = document.querySelector('.chat')
+  const chat = document.querySelector('#chat')
   // Escape HTML to prevent XSS attacks
   const text = escapeHTML(message.text)
 
-  if(chat) {
-    chat.innerHTML += `<div class="message flex flex-row pt-2 pb-3 relative transition-colors duration-300 hover:bg-base-200">
-      <div class="avatar indicator">
-        <div class="h-10 w-10 sm:w-12 sm:h-12 rounded"><img src="${user.avatar}"></div>
+  if (chat) {
+    chat.innerHTML += `<div class="chat chat-start py-2">
+      <div class="chat-image avatar">
+        <div class="w-10 rounded-full">
+          <img src="${user.avatar}" />
+        </div>
       </div>
-      <div class="ml-2 leading-4 md:leading-5 sm:mt-1.5"><span class="font-bold">${user.email}</span>
-      <small class="text-sm font-light tracking-tight ml-2">${formatDate(message.createdAt)}</small>
-      <p>${text}</p>
+      <div class="chat-header pb-1">
+        ${user.email}
+        <time class="text-xs opacity-50">${formatDate(message.createdAt)}</time>
       </div>
+      <div class="chat-bubble">${text}</div>
     </div>`
 
     // Always scroll to the bottom of our message list
@@ -164,9 +172,9 @@ const getCredentials = () => {
 }
 
 // Log in either using the given email/password or the token from storage
-const login = async credentials => {
+const login = async (credentials) => {
   try {
-    if(!credentials) {
+    if (!credentials) {
       // Try to authenticate using an existing token
       await client.reAuthenticate()
     } else {
@@ -179,14 +187,14 @@ const login = async credentials => {
 
     // If successful, show the chat page
     showChat()
-  } catch(error) {
+  } catch (error) {
     // If we got an error, show the login page
     showLogin(error)
   }
 }
 
 const addEventListener = (selector, event, handler) => {
-  document.addEventListener(event, async ev => {
+  document.addEventListener(event, async (ev) => {
     if (ev.target.closest(selector)) {
       handler(ev)
     }
@@ -215,11 +223,11 @@ addEventListener('#login', 'click', async () => {
 addEventListener('#logout', 'click', async () => {
   await client.logout()
 
-  document.getElementById('app').innerHTML = loginHTML
+  document.getElementById('app').innerHTML = loginTemplate()
 })
 
 // "Send" message form submission handler
-addEventListener('#send-message', 'submit', async ev => {
+addEventListener('#send-message', 'submit', async (ev) => {
   // This is the message text input field
   const input = document.querySelector('[name="text"]')
 

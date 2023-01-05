@@ -3,13 +3,12 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  build:
-
+  feathers-chat-ts:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [13.x]
+        node-version: [18.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -17,7 +16,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm test
-      env:
-        CI: true
+    - name: Install and run tests
+      working-directory: ./feathers-chat-ts
+      run: |
+        npm install
+        npm test
