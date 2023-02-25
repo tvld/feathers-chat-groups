@@ -1,0 +1,26 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server",
+      "command": "cd feathers-chat-ts && npm run dev",
+      // "command": " docker-compose up -d --remove-orphans && npm run dev && lsof -i :3030 -t | xargs kill",
+      "request": "launch",
+      "type": "node-terminal",
+      "presentation": {
+        "reveal": "silent",
+        "close": true
+      }
+    },
+    
+  ],
+  "compounds": [
+    {
+      "name": "> Fullstack",
+      "configurations": ["server"]
+    }
+  ]
+}

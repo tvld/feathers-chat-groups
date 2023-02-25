@@ -5,7 +5,8 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('groups', (table) => {
     table.increments('id')
 
-    table.string('text')
+    table.string('name')
+    table.integer('userId')
   })
 }
 

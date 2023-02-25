@@ -14,10 +14,11 @@ import {
   messageQueryResolver
 } from './messages.schema'
 
-import type { Application } from '../../declarations'
+import type { Application, HookContext } from '../../declarations'
 import { MessageService, getOptions } from './messages.class'
 import { messagePath, messageMethods } from './messages.shared'
 import { logRuntime } from '../../hooks/log-runtime'
+import { user } from '../users/users'
 
 export * from './messages.class'
 export * from './messages.schema'
@@ -45,7 +46,46 @@ export const message = (app: Application) => {
       all: [schemaHooks.validateQuery(messageQueryValidator), schemaHooks.resolveQuery(messageQueryResolver)],
       find: [],
       get: [],
-      create: [schemaHooks.validateData(messageDataValidator), schemaHooks.resolveData(messageDataResolver)],
+      create: [
+        schemaHooks.validateData(messageDataValidator),
+        schemaHooks.resolveData(messageDataResolver),
+
+        // Some additional group functionality
+        //
+        async ({ app, params, data, result, id }: HookContext) => {
+          if (data.text) {
+            if (data.text == '?') {
+              data.text = `Help information about groups:
+               
+            >groups create:<group name>  creates a new group
+            >groups list  lists all your own groups
+
+            To show a message in a group, pre-fix it with the group id and ":'. For example "5:How are you all?"
+            `
+            } else if (data.text.includes('>groups create:')) {
+              const name = data.text.split(':')[1] || 'no name'
+              const userId = params.user.id
+              const response = await app.service('groups').create({ userId, name })
+              data.text = `New group created: "${response.name}" and id ${response.id}.`
+            } else if (data.text.includes('>groups list')) {
+              const userId = params.user.id
+              const response = await app.service('groups').find({ query: { userId } })
+              if (response.total > 0) {
+                const grpNames = response.data.map((grp) => grp.name)
+                data.text = `All your groups: "${grpNames.join(', ')}"`
+              } else {
+                data.text = 'No groups. Make new with "groups new:<group_name>"'
+              }
+            } else if (data.text.includes(':')) {
+              const nr = data.text.split(':')[0] * 1
+              if (nr > 0) {
+                data.groupIds = [nr]
+                data.text = data.text + ` >> group ${nr}`
+              }
+            }
+          }
+        }
+      ],
       patch: [schemaHooks.validateData(messagePatchValidator), schemaHooks.resolveData(messagePatchResolver)],
       remove: []
     },

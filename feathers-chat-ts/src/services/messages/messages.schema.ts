@@ -6,6 +6,7 @@ import type { Static } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { userSchema } from '../users/users.schema'
+import { groupsSchema } from '../groups/groups.schema'
 
 // Main data model schema
 export const messageSchema = Type.Object(
@@ -14,7 +15,9 @@ export const messageSchema = Type.Object(
     text: Type.String(),
     createdAt: Type.Number(),
     userId: Type.Number(),
-    user: Type.Ref(userSchema)
+    user: Type.Ref(userSchema),
+    groupIds: Type.Optional(Type.Array(Type.Number())),
+    groups: Type.Array(Type.Ref(groupsSchema))
   },
   { $id: 'Message', additionalProperties: false }
 )
@@ -30,7 +33,7 @@ export const messageResolver = resolve<Message, HookContext>({
 export const messageExternalResolver = resolve<Message, HookContext>({})
 
 // Schema for creating new entries
-export const messageDataSchema = Type.Pick(messageSchema, ['text'], {
+export const messageDataSchema = Type.Pick(messageSchema, ['text', 'groupIds'], {
   $id: 'MessageData'
 })
 export type MessageData = Static<typeof messageDataSchema>

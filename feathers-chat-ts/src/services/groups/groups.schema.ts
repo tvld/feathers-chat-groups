@@ -10,7 +10,8 @@ import { dataValidator, queryValidator } from '../../validators'
 export const groupsSchema = Type.Object(
   {
     id: Type.Number(),
-    text: Type.String()
+    userId: Type.Number(),
+    name: Type.String()
   },
   { $id: 'Groups', additionalProperties: false }
 )
@@ -21,7 +22,7 @@ export const groupsResolver = resolve<Groups, HookContext>({})
 export const groupsExternalResolver = resolve<Groups, HookContext>({})
 
 // Schema for creating new entries
-export const groupsDataSchema = Type.Pick(groupsSchema, ['text'], {
+export const groupsDataSchema = Type.Pick(groupsSchema, ['name', 'userId'], {
   $id: 'GroupsData'
 })
 export type GroupsData = Static<typeof groupsDataSchema>
@@ -37,7 +38,7 @@ export const groupsPatchValidator = getValidator(groupsPatchSchema, dataValidato
 export const groupsPatchResolver = resolve<Groups, HookContext>({})
 
 // Schema for allowed query properties
-export const groupsQueryProperties = Type.Pick(groupsSchema, ['id', 'text'])
+export const groupsQueryProperties = Type.Pick(groupsSchema, ['id', 'name', 'userId'])
 export const groupsQuerySchema = Type.Intersect(
   [
     querySyntax(groupsQueryProperties),
