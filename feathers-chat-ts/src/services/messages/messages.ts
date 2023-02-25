@@ -79,7 +79,7 @@ export const message = (app: Application) => {
             } else if (data.text.includes(':')) {
               const nr = data.text.split(':')[0] * 1
               if (nr > 0) {
-                data.groupIds = [nr]
+                data.groupIds = [nr] // >> @TODO: Error
                 data.text = data.text + ` >> group ${nr}`
               }
             }
